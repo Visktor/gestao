@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "workspaces": [
+    "gestao_front",
+    "gestao_api",
+    "shared"
+  ],
+  "dependencies": {
+    "@tanstack/react-query": "^5.24.6",
+    "@trpc/client": "^11.0.0-next-beta.303",
+    "@trpc/react-query": "^11.0.0-next-beta.303",
+    "@trpc/server": "^11.0.0-next-beta.303",
+    "zod": "^3.22.4"
+  },
+  "imports": {
+    "#database/*": "./gestao_api/src/database/*",
+    "#schemas/*": "./gestao_api/src/schemas/*",
+    "#routes/*": "./gestao_api/src/routes/*",
+    "#services/*": "./gestao_api/src/services/*",
+    "#shared/*": "./gestao_api/src/shared/*"
+  }
+}
