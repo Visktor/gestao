@@ -1,6 +1,6 @@
-import { createTheme } from "@mui/material";
+import { ThemeOptions } from "@mui/material";
 
-const MuiTheme = createTheme({
+const baseTheme: ThemeOptions = {
   components: {
     MuiTextField: {
       defaultProps: {
@@ -15,7 +15,12 @@ const MuiTheme = createTheme({
         fullWidth: true,
       },
     },
+    MuiButton: {
+      defaultProps: {
+        variant: "contained",
+      },
+    },
   },
-});
+};
 
-export default MuiTheme;
+export default baseTheme;
