@@ -1,15 +1,22 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
 import Branches from "./branches";
 
 enum EquipmentCondition {
   GOOD,
   DAMAGED,
-  BROKEN
+  BROKEN,
 }
 
-@Entity('equipments')
+@Entity("equipments")
 export default class Equipments {
- @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   equipment_id: string;
 
   @Column("varchar")
@@ -24,9 +31,13 @@ export default class Equipments {
   @Column("varchar")
   manufacturer: string;
 
-  @Column("enum", { enum: EquipmentCondition})
+  @Column("enum", { enum: EquipmentCondition })
   condition: EquipmentCondition;
 
- @ManyToOne(() => Branches, b => b.equipments)
- branch: Branches
+  @Column("uuid")
+  branch_id: string;
+
+  @ManyToOne(() => Branches, (b) => b.equipments)
+  @JoinColumn({ name: "branch_id" })
+  branch: Branches;
 }

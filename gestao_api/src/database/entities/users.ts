@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -22,7 +23,7 @@ export default class Users {
   @Column({ unique: true, type: "varchar" })
   email: string;
 
-  @Column({ type: "varchar", length: "16", default: "123456" })
+  @Column({ type: "varchar", length: "16", default: "123456", select: false })
   password: string;
 
   @Column("varchar")
@@ -34,15 +35,29 @@ export default class Users {
   @Column("varchar")
   last_name: string;
 
-  @OneToMany(() => Reports, (r) => r.user)
+  @Column("uuid")
+  role_id: string;
+
+  @Column("uuid")
+  branch_id: string;
+
+  @OneToMany(() => Reports, (r) => r.user, {
+    eager: false,
+  })
   reports: Reports[];
 
-  @ManyToMany(() => Classes)
+  @ManyToMany(() => Classes, { eager: false })
   classes: Classes[];
 
-  @ManyToOne(() => Branches, (b) => b.users)
+  @ManyToOne(() => Branches, (b) => b.users, {
+    eager: true,
+  })
+  @JoinColumn({ name: "branch_id" })
   branch: Branches;
 
-  @ManyToOne(() => Roles, (r) => r.users)
+  @ManyToOne(() => Roles, (r) => r.users, {
+    eager: true,
+  })
+  @JoinColumn({ name: "role_id" })
   role: Roles;
 }

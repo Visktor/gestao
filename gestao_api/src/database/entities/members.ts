@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -40,7 +41,7 @@ export default class Members {
   join_date: Date;
 
   @Column("uuid")
-  fk_membership_type: string;
+  branch_id: string;
 
   @Column({ type: "enum", enum: Status, default: 0 })
   status: Status;
@@ -52,11 +53,12 @@ export default class Members {
   payments: Payments[];
 
   @ManyToMany(() => Classes)
-  classes: Classes[]
+  classes: Classes[];
 
-  @ManyToOne(() => Branches, b => b.members)
-  branch: Branches
+  @ManyToOne(() => Branches, (b) => b.members)
+  @JoinColumn({ name: "branch_id" })
+  branch: Branches;
 
-  @OneToMany(() => Sales, s => s.member)
-  sales: Sales[]
+  @OneToMany(() => Sales, (s) => s.member)
+  sales: Sales[];
 }

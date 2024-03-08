@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -36,16 +37,19 @@ export default class Classes {
   @Column("time")
   end_time: Date;
 
+  @Column("uuid")
+  branch_id: string;
+
   @Column("json")
   days_offered: {
     [key in
-    | "monday"
-    | "tuesday"
-    | "wednesday"
-    | "thursday"
-    | "friday"
-    | "saturday"
-    | "sunday"]: boolean;
+      | "monday"
+      | "tuesday"
+      | "wednesday"
+      | "thursday"
+      | "friday"
+      | "saturday"
+      | "sunday"]: boolean;
   };
 
   @ManyToMany(() => Users, { onDelete: "CASCADE" })
@@ -57,5 +61,6 @@ export default class Classes {
   members: Members[];
 
   @ManyToOne(() => Branches, (b) => b.classes)
+  @JoinColumn({ name: "branch_id" })
   branch: Branches;
 }

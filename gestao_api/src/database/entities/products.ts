@@ -1,4 +1,12 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import ProductCategories from "./product_categories";
 import Sales from "./sales";
 
@@ -19,10 +27,14 @@ export default class Products {
   @Column("integer")
   stock: number;
 
+  @Column("uuid")
+  product_category_id: string;
+
   @ManyToOne(() => ProductCategories, (pc) => pc.product)
+  @JoinColumn({ name: "product_category_id" })
   product_category: ProductCategories;
 
   @ManyToMany(() => Sales)
   @JoinTable()
-  sales: Sales[]
+  sales: Sales[];
 }

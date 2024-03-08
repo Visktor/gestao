@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -27,6 +28,12 @@ export default class Reports {
   @Column("text", { nullable: true })
   attachment_url: string;
 
+  @Column("uuid")
+  user_id: string;
+
   @ManyToOne(() => Users, (u) => u.user_id)
+  @JoinColumn({
+    name: "user_id",
+  })
   user: Users;
 }

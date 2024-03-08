@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -26,9 +27,13 @@ export default class Sales {
   @Column("varchar")
   buyer_phone: string;
 
+  @Column("uuid")
+  member_id: string;
+
   @ManyToMany(() => Products)
   products: Products[];
 
   @ManyToOne(() => Members, (m) => m.sales)
+  @JoinColumn({ name: "member_id" })
   member: Members;
 }

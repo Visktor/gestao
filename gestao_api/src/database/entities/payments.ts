@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import Members from "./members";
 
 // TODO: Add different payment methods
@@ -22,9 +28,13 @@ export default class Payments {
   @Column("date")
   payment_date: Date;
 
+  @Column("uuid")
+  member_id: string;
+
   @Column("enum", { enum: PaymentMethods })
   payment_method: PaymentMethods;
 
   @ManyToOne(() => Members, (u) => u.member_id)
+  @JoinColumn({ name: "member_id" })
   member: Members;
 }
