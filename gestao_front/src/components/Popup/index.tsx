@@ -4,7 +4,8 @@ import {
   DialogContent,
   DialogProps,
   Paper,
-  Typography,
+  DialogActions,
+  DialogTitle,
 } from "@mui/material";
 
 interface PopupProps extends DialogProps {
@@ -14,23 +15,21 @@ interface PopupProps extends DialogProps {
 export default function Popup(props: PopupProps) {
   return (
     <Dialog {...props}>
-      <Box mx={"auto"} mt={1}>
-        <Typography variant="h6" color="primary">
-          {props.title}
-        </Typography>
-      </Box>
+      <DialogTitle>{props.title}</DialogTitle>
       <DialogContent>
         <Box
           component={Paper}
           variant="outlined"
-          minHeight={200}
           p={1}
           display="flex"
           flexDirection="column"
         >
-          {props.children}
+          {Array.isArray(props.children) ? props.children[0] : props.children}
         </Box>
       </DialogContent>
+      {Array.isArray(props.children) && !!props.children[1] ? (
+        <DialogActions>{props.children[1]}</DialogActions>
+      ) : null}
     </Dialog>
   );
 }
