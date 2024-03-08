@@ -41,12 +41,15 @@
       ],
       "#schemas/*": [
         "./../shared/schemas/*"
+      ],
+      "#hooks/*": [
+        "./src/hooks/*"
+      ],
+      "#context/*": [
+        "./src/context/*"
       ]
     }
   },
-  "include": [
-    "src"
-  ],
   "references": [
     {
       "path": "./tsconfig.node.json"

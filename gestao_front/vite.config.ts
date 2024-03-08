@@ -15,6 +15,7 @@ export default defineConfig({
       "#hooks": `${path.resolve(__dirname, "./src/hooks")}`,
       "#utils": `${path.resolve(__dirname, "./src/utils")}`,
       "#schemas": `${path.resolve(__dirname, "./../shared/schemas")}`,
+      "#context": `${path.resolve(__dirname, "./src/context")}`,
     },
   },
 });

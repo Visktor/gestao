@@ -49,6 +49,7 @@ export default function Login() {
               value={formState.email.value}
               error={formState.email.error}
               onChange={(...args) => formStateChange(...args, "email")}
+              useHookForms={false}
               useOnChangeValidation
             />
           </Grid>

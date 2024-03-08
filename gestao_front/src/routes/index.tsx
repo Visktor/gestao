@@ -4,6 +4,7 @@ import Login from "./login";
 import Home from "./auth/home";
 import UsersList from "./auth/users";
 import BranchesList from "./auth/branches";
+import RolesList from "./auth/roles";
 
 const Routes = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const Routes = createBrowserRouter([
       {
         element: <BranchesList />,
         path: "/branches",
+      },
+      {
+        element: <RolesList />,
+        path: "/roles",
       },
     ],
   },
