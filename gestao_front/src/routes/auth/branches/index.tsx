@@ -36,13 +36,13 @@ export default function BranchesList() {
               return (
                 <Button
                   variant="contained"
-                  startIcon={<FontAwesomeIcon icon={faPlus} />}
+                  color="inherit"
                   onClick={() => {
                     setOpenUpsert(true);
                   }}
-                  title={"Create new user"}
+                  title={"Create new branch"}
                 >
-                  {"New"}
+                  <FontAwesomeIcon icon={faPlus} />
                 </Button>
               );
             },

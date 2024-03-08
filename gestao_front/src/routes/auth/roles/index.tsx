@@ -10,6 +10,7 @@ import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import useConfirmStore from "#context/confirm";
 import { Unpacked } from "src/@types/util";
 import useAlertStore from "#context/alert";
+
 export default function RolesList() {
   const { data: roles, refetch } = trpcReact.roles.getAll.useQuery(undefined, {
     initialData: [],
@@ -66,7 +67,7 @@ export default function RolesList() {
               }: CustomCellRendererProps<Unpacked<typeof roles>>) => {
                 return (
                   <Box position="absolute">
-                    <IconButton title="edit" onClick={() => {}} size="small">
+                    <IconButton title="edit" onClick={() => { }} size="small">
                       <FontAwesomeIcon icon={faPenToSquare} color="orange" />
                     </IconButton>
                     <IconButton
@@ -102,6 +103,9 @@ export default function RolesList() {
       </Box>
       <RolesCreate
         open={openCreate}
+        onMutated={() => {
+          refetch();
+        }}
         close={() => {
           setOpenCreate(false);
         }}

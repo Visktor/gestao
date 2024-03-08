@@ -23,7 +23,7 @@ export default function DataGrid<T extends any[]>(props: DataGridProps<T>) {
         display: "flex",
         flexDirection: "column",
         gap: 8,
-        margin: 8,
+        padding: 8,
         width: "100%",
       }}
     >
@@ -34,7 +34,12 @@ export default function DataGrid<T extends any[]>(props: DataGridProps<T>) {
           ))}
         </Box>
       ) : null}
-      <AgGridReact {...props} />
+      <AgGridReact
+        {...props}
+        autoSizeStrategy={{
+          type: "fitGridWidth",
+        }}
+      />
     </div>
   );
 }

@@ -1,18 +1,27 @@
-import { AutocompleteChangeReason } from "@mui/material";
+import { AutocompleteChangeReason, AutocompleteValue } from "@mui/material";
 import AutocompleteDebounce from "../Debounce";
 import { useState } from "react";
 import { trpcReact } from "#services/server";
 
 type BranchSelect = { branch_id: string; name: string };
 
-export default function AutocompleteBranches({
+export default function AutocompleteBranches<
+  T extends BranchSelect,
+  M extends boolean,
+>({
   value,
   onChange,
+  multiple,
+  error,
+  helperText,
 }: {
-  value: BranchSelect | null;
+  value: M extends true ? T[] : T | null;
+  multiple?: M;
+  error?: boolean;
+  helperText?: string;
   onChange: (
     e: React.SyntheticEvent<Element, Event>,
-    newValue: BranchSelect | null,
+    newValue: AutocompleteValue<BranchSelect, M, boolean, false>,
     changeReason: AutocompleteChangeReason,
   ) => void;
 }) {
@@ -43,10 +52,12 @@ export default function AutocompleteBranches({
       }}
       textField={{
         label: "Branch",
+        error,
+        helperText,
       }}
       autocomplete={{
         value: value,
-        multiple: false,
+        multiple: multiple,
         inputValue: inputValue,
         options: options,
         onChange: (e, newValue, reason) => {

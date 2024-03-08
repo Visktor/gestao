@@ -1,3 +1,4 @@
+import { set } from "date-fns";
 import {
   Grid,
   FormControlLabel,
@@ -18,9 +19,11 @@ import useAlertStore from "#context/alert";
 export default function RolesCreate({
   open,
   close,
+  onMutated,
 }: {
   open: boolean;
   close: () => void;
+  onMutated?: () => void;
 }) {
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -31,8 +34,8 @@ export default function RolesCreate({
         schedule_classes: false,
       },
       salary: "",
-      shift_start: new Date(),
-      shift_end: new Date(),
+      shift_start: set(new Date(), { hours: 9, minutes: 0, seconds: 0 }),
+      shift_end: set(new Date(), { hours: 17, minutes: 0, seconds: 0 }),
       name: "",
     },
     resolver: zodResolver(zscRolesUpsert),
@@ -43,28 +46,30 @@ export default function RolesCreate({
   const { alertSuccess, alertError } = useAlertStore();
 
   return (
-    <Popup title="Create Role" open={open} onClose={close}>
-      <Grid
-        container
-        spacing={3}
-        p={1}
-        component="form"
-        onSubmit={handleSubmit((data) => {
-          createRoleCall(
-            { ...data, salary: Number(data.salary) },
-            {
-              onSuccess: () => {
-                alertSuccess("Role successfuly created.");
-              },
-              onError: () => {
-                alertError(
-                  "Unexpected error during role criation, try again later.",
-                );
-              },
+    <Popup
+      title="Create Role"
+      open={open}
+      onClose={close}
+      component="form"
+      onSubmit={handleSubmit((data) => {
+        createRoleCall(
+          { ...data, salary: Number(data.salary) },
+          {
+            onSuccess: () => {
+              alertSuccess("Role successfuly created.");
+              onMutated?.();
+              close();
             },
-          );
-        })}
-      >
+            onError: () => {
+              alertError(
+                "Unexpected error during role criation, try again later.",
+              );
+            },
+          },
+        );
+      })}
+    >
+      <Grid container spacing={3} p={1}>
         <Grid item xs={12}>
           <Controller
             control={control}
