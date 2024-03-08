@@ -30,6 +30,7 @@ export default function Home() {
     () => [
       { label: "Users", color: "#cfd3f3", path: "/users" },
       { label: "Branches", color: "#c12f34", path: "/branches" },
+      { label: "Roles", color: "#b4fa24", path: "/roles" },
     ],
     [],
   );

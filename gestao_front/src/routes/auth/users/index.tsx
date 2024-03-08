@@ -7,20 +7,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function UsersList() {
-  const { data, isPending } = trpcReact.users.getAll.useQuery({
-    select: [
-      "email",
-      "address",
-      "user_id",
-      "username",
-      "first_name",
-      "last_name",
-    ],
-  });
+  const { data, isFetched } = trpcReact.users.getAll.useQuery();
 
   const [openCreate, setOpenCreate] = useState(false);
 
-  return isPending ? (
+  return !isFetched ? (
     <>
       <CircularProgress />
     </>
@@ -44,7 +35,7 @@ export default function UsersList() {
               );
             },
           ]}
-          columnDefs={[{ field: "email" }, { field: "reports" }]}
+          columnDefs={[{ field: "user_id" }, { field: "email" }]}
           rowData={data ?? []}
         />
       </Box>

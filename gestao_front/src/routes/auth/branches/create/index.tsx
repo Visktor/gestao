@@ -33,7 +33,9 @@ export default function BranchUpsertPopup({
       onClose={close}
       component="form"
       onSubmit={handleSubmit((data) => {
-        branchMutation.mutate(data);
+        branchMutation.mutate(data, {
+          onSuccess: () => {},
+        });
       })}
     >
       <Grid container spacing={1}>

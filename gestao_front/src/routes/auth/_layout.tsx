@@ -1,6 +1,14 @@
 import { Box } from "@mui/material";
-interface AuthLayoutProps { }
 
-export default function AuthLayout({ }: AuthLayoutProps) {
-  return <Box display="flex"></Box>;
+export default function AuthLayout() {
+
+
+
+  return (
+    <>
+      <Box display="flex">
+
+      </Box>
+    </>
+  );
 }
