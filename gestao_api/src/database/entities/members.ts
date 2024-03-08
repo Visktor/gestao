@@ -43,11 +43,15 @@ export default class Members {
   @Column("uuid")
   branch_id: string;
 
+  @Column("uuid")
+  plan_id: string;
+
   @Column({ type: "enum", enum: Status, default: 0 })
   status: Status;
 
-  @OneToMany(() => Plans, (p) => p.member)
-  plans: Plans[];
+  @ManyToOne(() => Plans, (p) => p.members)
+  @JoinColumn({ name: "plan_id" })
+  plan: Plans;
 
   @OneToMany(() => Payments, (p) => p.member)
   payments: Payments[];
