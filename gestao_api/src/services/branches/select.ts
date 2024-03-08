@@ -18,8 +18,8 @@ export default async function branchesSelect({
     },
     where:
       input.searchType === "id"
-        ? { branch_id: Like(input.searchValue) }
-        : { name: Like(input.searchValue) },
+        ? { branch_id: Like(`${input.searchValue}%`) }
+        : { name: Like(`%${input.searchValue}%`) },
   });
 
   return branches as {
