@@ -16,6 +16,8 @@ const zscUsersUpsert = z.object({
   first_name: z.string(),
   last_name: z.string(),
   address: z.string(),
+  branch_id: z.string().uuid(),
+  role_id: z.string().uuid(),
 });
 
 const zscUsersGetOne = z.string().uuid();
