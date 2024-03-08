@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 
-export default function useDebounce({
+export default function useDebounce<T extends string>({
   depValue,
   callback,
   timeout,
   error,
 }: {
-  depValue: string | number;
+  depValue: T;
   /** Used to determine whether the callback function should
    * be called.*/
-  callback?: (debouncedValue: string | number, abortSignal: AbortSignal) => any;
+  callback?: (debouncedValue: string, abortSignal: AbortSignal) => any;
   error?: boolean;
   timeout?: number;
 }): string | number {
-  const [debounced, setDebounced] = useState<string | number>("");
+  const [debounced, setDebounced] = useState<T>(() => depValue);
 
   useEffect(() => {
     const timeOutRef = setTimeout(() => {
