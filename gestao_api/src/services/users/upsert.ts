@@ -10,5 +10,6 @@ export default async function usersUpsert({
 }) {
   const users = AppDataSource.getRepository(Users);
   const savedUser = await users.save(input);
+
   return savedUser;
 }

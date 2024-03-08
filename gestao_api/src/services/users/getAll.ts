@@ -1,16 +1,13 @@
-import { z } from "zod";
 import { AppDataSource } from "../../database/datasource";
 import Users from "../../database/entities/users";
-import { userGetAllOpts } from "../../routes/users.router";
+import { Unpacked } from "../../@types/utils";
 
-type opts = z.infer<typeof userGetAllOpts>;
-
-export default async function usersGetAll({ input }: { input: opts }) {
+export default async function usersGetAll() {
   const users = AppDataSource.getRepository(Users);
 
   const user = await users.find({
-    select: input?.select,
+    loadEagerRelations: false,
   });
 
-  return user;
+  return user as Omit<Unpacked<typeof user>, "reports" | "classes" | "branch" | "role" | "password">[];
 }
