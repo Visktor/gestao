@@ -14,8 +14,8 @@ export const userGetAllOpts = getAllOpts(new Users());
 
 const usersRouter = trpc.router({
   getOne: procedure.input(zscUsersGetOne).query(usersGetOne),
-  getAll: procedure.input(userGetAllOpts).query(usersGetAll),
-  upsert: procedure.input(zscUsersUpsert).query(usersUpsert),
+  getAll: procedure.query(usersGetAll),
+  upsert: procedure.input(zscUsersUpsert).mutation(usersUpsert),
 });
 
 export default usersRouter;
