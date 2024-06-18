@@ -1,16 +1,16 @@
 import {
   Column,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import Reports from "./reports";
-import Classes from "./classes";
 import Branches from "./branches";
 import Roles from "./roles";
+import LinkerUsersClasses from "./users_classes";
 
 @Entity({ name: "users" })
 export default class Users {
@@ -29,7 +29,7 @@ export default class Users {
   @Column("varchar")
   address: string;
 
-  @Column("int")
+  @Column("varchar")
   first_name: string;
 
   @Column("varchar")
@@ -41,13 +41,17 @@ export default class Users {
   @Column("uuid")
   branch_id: string;
 
+  @DeleteDateColumn()
+  delete_date: Date;
+
   @OneToMany(() => Reports, (r) => r.user, {
     eager: false,
   })
   reports: Reports[];
 
-  @ManyToMany(() => Classes, { eager: false })
-  classes: Classes[];
+  @OneToMany(() => LinkerUsersClasses, luc => luc.class)
+  @JoinColumn({ name: "user_id", referencedColumnName: "user_id" })
+  class_links: LinkerUsersClasses[]
 
   @ManyToOne(() => Branches, (b) => b.users, {
     eager: true,

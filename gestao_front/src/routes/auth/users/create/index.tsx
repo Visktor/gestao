@@ -1,39 +1,84 @@
 import Popup from "#components/Popup";
-import TextFieldEmail from "#components/TextFields/Email";
 import { Button, Grid, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { zscUsersUpsert } from "#schemas/users";
 import { trpcReact } from "#services/server";
 import AutocompleteBranches from "#components/Autocompletes/Branches";
+import AutocompleteRoles from "#components/Autocompletes/Roles";
+import { ForwardedRef, forwardRef, useImperativeHandle } from "react";
+import useAlertStore from "#context/alert";
+import { useCallback } from "react";
 
-export default function UserUpsertPopup({
-  open,
-  close,
-}: {
-  open: boolean;
-  close: () => void;
-}) {
-  const { control, handleSubmit, reset } = useForm<{
-    email: string;
-    username: string;
-    first_name: string;
-    last_name: string;
-    address: string;
-    branch: { branch_id: string; name: string } | null;
-  }>({
+export type UserUpsertForm = {
+  email: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  address: string;
+  branch_id: string;
+  role_id: string;
+  user_id?: string;
+};
+
+function UserUpsertPopup(
+  {
+    open,
+    close,
+    onSuccess,
+  }: {
+    open: boolean;
+    close: () => void;
+    onSuccess?: () => void;
+  },
+  ref: ForwardedRef<{ reset: (data: UserUpsertForm) => void }>,
+) {
+  const { control, reset, handleSubmit } = useForm<UserUpsertForm>({
     resolver: zodResolver(zscUsersUpsert),
+    reValidateMode: "onChange",
     defaultValues: {
       email: "",
       username: "",
       first_name: "",
       last_name: "",
       address: "",
-      branch: null,
+      branch_id: "",
+      role_id: "",
     },
   });
 
-  const submit = trpcReact.users.upsert.useMutation().mutate;
+  const { alertError, alertSuccess } = useAlertStore();
+  const userUpsertMutation = trpcReact.users.upsert.useMutation().mutate;
+
+  const formSubmitHandler = useCallback(
+    handleSubmit((data) => {
+      userUpsertMutation(data, {
+        onSuccess: () => {
+          alertSuccess(
+            `User successfuly ${data.user_id ? "altered" : "created"}.`,
+          );
+          close();
+          onSuccess?.();
+        },
+        onError: () => {
+          alertError(
+            "There's been an error processing your request. Try again later.",
+          );
+        },
+      });
+    }),
+    [],
+  );
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      reset: (data) => {
+        reset(data);
+      },
+    }),
+    [],
+  );
 
   return (
     <Popup
@@ -47,18 +92,7 @@ export default function UserUpsertPopup({
       }}
       keepMounted={false}
       component="form"
-      onSubmit={handleSubmit((data) => {
-        if (!data.branch) {
-          return;
-        }
-        const branch_id = data.branch.branch_id;
-        submit(
-          { ...data, branch_id: branch_id, role_id: "" },
-          {
-            onSuccess: () => { },
-          },
-        );
-      })}
+      onSubmit={formSubmitHandler}
     >
       <Grid container spacing={1}>
         <Grid item xs={6}>
@@ -67,11 +101,12 @@ export default function UserUpsertPopup({
             name="email"
             render={({ field, fieldState }) => {
               return (
-                <TextFieldEmail
+                <TextField
+                  label="Email"
                   value={field.value}
-                  onChange={(value) => field.onChange(value)}
+                  onChange={field.onChange}
                   error={!!fieldState.error}
-                  useHookForms
+                  helperText={fieldState.error?.message}
                 />
               );
             }}
@@ -87,6 +122,7 @@ export default function UserUpsertPopup({
                   label="Username"
                   {...field}
                   error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
                 />
               );
             }}
@@ -102,6 +138,7 @@ export default function UserUpsertPopup({
                   label="First Name"
                   {...field}
                   error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
                 />
               );
             }}
@@ -117,6 +154,7 @@ export default function UserUpsertPopup({
                   label="Last Name"
                   {...field}
                   error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
                 />
               );
             }}
@@ -132,6 +170,7 @@ export default function UserUpsertPopup({
                   label="Address"
                   {...field}
                   error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
                 />
               );
             }}
@@ -140,21 +179,45 @@ export default function UserUpsertPopup({
         <Grid item xs={6}>
           <Controller
             control={control}
-            name="branch"
-            render={({ field }) => {
+            name="branch_id"
+            render={({ field, fieldState }) => {
               return (
                 <AutocompleteBranches
                   value={field.value}
-                  onChange={(_, newValue) => field.onChange(newValue)}
+                  useIdValue
+                  helperText={fieldState.error?.message}
+                  error={!!fieldState.error}
+                  onChange={(_, newValue) => {
+                    field.onChange(newValue ?? "");
+                  }}
+                />
+              );
+            }}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <Controller
+            control={control}
+            name="role_id"
+            render={({ field }) => {
+              return (
+                <AutocompleteRoles
+                  useIdValue
+                  value={field.value}
+                  onChange={(_, newValue) => {
+                    field.onChange(newValue ?? "");
+                  }}
                 />
               );
             }}
           />
         </Grid>
       </Grid>
-      <Button variant="contained" onClick={() => { }}>
+      <Button type="submit" variant="contained">
         {"SEND"}
       </Button>
     </Popup>
   );
 }
+
+export default forwardRef(UserUpsertPopup);

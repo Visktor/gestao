@@ -6,6 +6,7 @@ import UsersList from "./auth/users";
 import BranchesList from "./auth/branches";
 import RolesList from "./auth/roles";
 import PlansList from "./auth/plans";
+import MembersList from "./auth/members";
 
 const Routes = createBrowserRouter([
   {
@@ -33,9 +34,13 @@ const Routes = createBrowserRouter([
         path: "/roles",
       },
       {
-        element: <PlansList/>,
-        path: '/plans'
-      }
+        element: <PlansList />,
+        path: "/plans",
+      },
+      {
+        element: <MembersList />,
+        path: "/members",
+      },
     ],
   },
 ]);

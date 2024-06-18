@@ -5,15 +5,32 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { branchesUpsertInput } from "#schemas/branches";
 import TextFieldHookForm from "#components/TextFields/HookForm";
+import useAlertStore from "#context/alert";
+import { ForwardedRef, forwardRef, useImperativeHandle } from "react";
 
-export default function BranchUpsertPopup({
-  open,
-  close,
-}: {
-  open: boolean;
-  close: () => void;
-}) {
-  const { control, handleSubmit } = useForm({
+export type BranchUpsertForm = {
+  name: string;
+  city: string;
+  neighborhood: string;
+  street: string;
+  state: string;
+};
+
+function BranchUpsertPopup(
+  {
+    open,
+    close,
+    onRegistered,
+  }: {
+    open: boolean;
+    close: () => void;
+    onRegistered?: () => void;
+  },
+  ref: ForwardedRef<{
+    reset: (data: Partial<BranchUpsertForm>) => void;
+  }>,
+) {
+  const { control, handleSubmit, reset } = useForm<BranchUpsertForm>({
     defaultValues: {
       name: "",
       city: "",
@@ -25,6 +42,15 @@ export default function BranchUpsertPopup({
   });
 
   const branchMutation = trpcReact.branches.upsert.useMutation();
+  const { alertError, alertSuccess } = useAlertStore();
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      reset,
+    }),
+    [],
+  );
 
   return (
     <Popup
@@ -34,7 +60,16 @@ export default function BranchUpsertPopup({
       component="form"
       onSubmit={handleSubmit((data) => {
         branchMutation.mutate(data, {
-          onSuccess: () => {},
+          onSuccess: () => {
+            close();
+            alertSuccess("Branch Successfully created.");
+            onRegistered?.();
+          },
+          onError: () => {
+            alertError(
+              "There was an error processing your request. Try again later.",
+            );
+          },
         });
       })}
     >
@@ -67,3 +102,4 @@ export default function BranchUpsertPopup({
     </Popup>
   );
 }
+export default forwardRef(BranchUpsertPopup);

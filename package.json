@@ -10,6 +10,8 @@
     "@trpc/client": "^11.0.0-next-beta.303",
     "@trpc/react-query": "^11.0.0-next-beta.303",
     "@trpc/server": "^11.0.0-next-beta.303",
+    "lodash": "^4.17.21",
+    "superjson": "1.13.3",
     "zod": "^3.22.4"
   },
   "imports": {
@@ -18,5 +20,8 @@
     "#routes/*": "./gestao_api/src/routes/*",
     "#services/*": "./gestao_api/src/services/*",
     "#shared/*": "./gestao_api/src/shared/*"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.0"
   }
 }

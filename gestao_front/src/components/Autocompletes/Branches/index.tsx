@@ -3,11 +3,10 @@ import AutocompleteDebounce from "../Debounce";
 import { useState } from "react";
 import { trpcReact } from "#services/server";
 
-type BranchSelect = { branch_id: string; name: string };
+export type BranchSelect = { branch_id: string; name: string };
 
 export default function AutocompleteBranches<
-  T extends BranchSelect,
-  M extends boolean,
+  M extends boolean = false,
 >({
   value,
   onChange,
@@ -15,13 +14,13 @@ export default function AutocompleteBranches<
   error,
   helperText,
 }: {
-  value: M extends true ? T[] : T | null;
+  value: M extends true ? BranchSelect[] : BranchSelect | null;
   multiple?: M;
   error?: boolean;
   helperText?: string;
   onChange: (
     e: React.SyntheticEvent<Element, Event>,
-    newValue: AutocompleteValue<BranchSelect, M, boolean, false>,
+    newValue: AutocompleteValue<BranchSelect, M, false, false>,
     changeReason: AutocompleteChangeReason,
   ) => void;
 }) {
@@ -37,6 +36,7 @@ export default function AutocompleteBranches<
       labelField="name"
       valueField="branch_id"
       debounce={{
+        setOptions,
         pending: isLoading,
         callback: async (dValue, signal) => {
           setIsLoading(true);
@@ -46,18 +46,19 @@ export default function AutocompleteBranches<
               signal,
             },
           );
-          setOptions(result);
           setIsLoading(false);
+          return result;
         },
       }}
       textField={{
-        label: "Branch",
+        label: `Branch${multiple ? "es" : ""}`,
         error,
         helperText,
       }}
       autocomplete={{
         value: value,
         multiple: multiple,
+        limitTags: 3,
         inputValue: inputValue,
         options: options,
         onChange: (e, newValue, reason) => {

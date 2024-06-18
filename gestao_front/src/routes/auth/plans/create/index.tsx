@@ -5,22 +5,31 @@ import { zscPlansUpsert } from "#schemas/plans";
 import { trpcReact } from "#services/server";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Grid, TextField, Box } from "@mui/material";
+import { ForwardedRef, forwardRef, useImperativeHandle } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-export default function PlansCreate({
-  open,
-  close,
-}: {
-  open: boolean;
-  close: () => void;
-  refetchList: () => void;
-}) {
-  const { control, handleSubmit } = useForm<{
-    name: string;
-    monthly_fee: string;
-    duration: string;
-    branches: { branch_id: string; name: string }[];
-  }>({
+export type PlanUpsertForm = {
+  name: string;
+  monthly_fee: string;
+  duration: string;
+  branches: string[];
+};
+
+function PlansCreate(
+  {
+    open,
+    close,
+    refetchList,
+  }: {
+    open: boolean;
+    close: () => void;
+    refetchList: () => void;
+  },
+  ref: ForwardedRef<{
+    reset: (data: PlanUpsertForm) => void;
+  }>,
+) {
+  const { control, handleSubmit, reset } = useForm<PlanUpsertForm>({
     defaultValues: {
       name: "",
       monthly_fee: "",
@@ -42,6 +51,7 @@ export default function PlansCreate({
       {
         onSuccess: () => {
           alertSuccess("Plan successfuly created");
+          refetchList();
           close();
         },
         onError: () => {
@@ -51,6 +61,14 @@ export default function PlansCreate({
         },
       },
     ),
+  );
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      reset,
+    }),
+    [],
   );
 
   return (
@@ -87,6 +105,7 @@ export default function PlansCreate({
               return (
                 <TextField
                   label="Monthly Fee"
+                  type="number"
                   value={field.value}
                   onChange={field.onChange}
                   error={!!fieldState.error}
@@ -113,7 +132,7 @@ export default function PlansCreate({
             }}
           />
         </Grid>
-        <Grid xs={6}>
+        <Grid item xs={6}>
           <Controller
             control={control}
             name="branches"
@@ -121,6 +140,7 @@ export default function PlansCreate({
               return (
                 <AutocompleteBranches
                   multiple
+                  useIdValue
                   value={field.value}
                   onChange={(_, newValue) => {
                     field.onChange(newValue);
@@ -149,3 +169,5 @@ export default function PlansCreate({
     </Popup>
   );
 }
+
+export default forwardRef(PlansCreate);

@@ -3,7 +3,10 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import appRouter from "./routes/routes";
 import cors from "cors";
 import logger from "./logger";
-require("dotenv").config();
+import dotenv from "dotenv";
+import { createExpressContext } from "./trpc";
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
@@ -16,6 +19,7 @@ app.use(
     onError: ({ error, path }) => {
       logger.error(`url: ${path}, error: ${error.message}`);
     },
+    createContext: createExpressContext,
   }),
 );
 

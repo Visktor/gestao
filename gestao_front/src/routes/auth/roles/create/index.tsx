@@ -15,17 +15,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { trpcReact } from "#services/server";
 import Popup from "#components/Popup";
 import useAlertStore from "#context/alert";
+import { ForwardedRef, forwardRef, useImperativeHandle } from "react";
 
-export default function RolesCreate({
-  open,
-  close,
-  onMutated,
-}: {
-  open: boolean;
-  close: () => void;
-  onMutated?: () => void;
-}) {
-  const { control, handleSubmit } = useForm({
+function RolesCreate(
+  {
+    open,
+    close,
+    onMutated,
+  }: {
+    open: boolean;
+    close: () => void;
+    onMutated?: () => void;
+  },
+  ref: ForwardedRef<{
+    reset: (data: RoleForm) => void;
+  } | null>,
+) {
+  const { control, handleSubmit, reset } = useForm<RoleForm>({
     defaultValues: {
       permissions: {
         create_user: false,
@@ -45,12 +51,25 @@ export default function RolesCreate({
   const createRoleCall = trpcReact.roles.upsert.useMutation().mutate;
   const { alertSuccess, alertError } = useAlertStore();
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      reset,
+    }),
+    [],
+  );
+
   return (
     <Popup
       title="Create Role"
       open={open}
       onClose={close}
       component="form"
+      TransitionProps={{
+        onExited: () => {
+          reset();
+        },
+      }}
       onSubmit={handleSubmit((data) => {
         createRoleCall(
           { ...data, salary: Number(data.salary) },
@@ -246,3 +265,18 @@ export default function RolesCreate({
     </Popup>
   );
 }
+
+export type RoleForm = {
+  permissions: {
+    create_user: boolean;
+    update_role: boolean;
+    manage_equipment: boolean;
+    schedule_classes: boolean;
+  };
+  salary: string;
+  shift_start: Date;
+  shift_end: Date;
+  name: string;
+};
+
+export default forwardRef(RolesCreate);

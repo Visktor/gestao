@@ -3,12 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import Products from "./products";
 import Members from "./members";
+import LinkerProductsSales from "./products_sales";
 
 @Entity("sales")
 export default class Sales {
@@ -30,10 +30,11 @@ export default class Sales {
   @Column("uuid")
   member_id: string;
 
-  @ManyToMany(() => Products)
-  products: Products[];
-
   @ManyToOne(() => Members, (m) => m.sales)
   @JoinColumn({ name: "member_id" })
   member: Members;
+
+  @OneToMany(() => LinkerProductsSales, (lpc) => lpc.sale)
+  @JoinColumn({ name: "sale_id", referencedColumnName: "sale_id" })
+  product_links: LinkerProductsSales;
 }

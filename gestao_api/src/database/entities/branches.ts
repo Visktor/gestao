@@ -1,6 +1,8 @@
 import {
   Column,
+  DeleteDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
@@ -12,6 +14,7 @@ import Equipments from "./equipments";
 import Expenses from "./expenses";
 import Members from "./members";
 import Plans from "./plans";
+import LinkerPlansBranches from "./plans_branches";
 
 @Entity("branches")
 export default class Branches {
@@ -33,6 +36,9 @@ export default class Branches {
   @Column("varchar")
   state: string;
 
+  @DeleteDateColumn()
+  delete_date: Date;
+
   @OneToMany(() => Users, (u) => u.branch)
   users: Users[];
 
@@ -48,7 +54,7 @@ export default class Branches {
   @OneToMany(() => Members, (m) => m.branch)
   members: Members[];
 
-  @ManyToMany(() => Plans)
-  @JoinTable()
-  plans: Plans[];
+  @OneToMany(() => LinkerPlansBranches, lpb => lpb.branch)
+  @JoinColumn({referencedColumnName: 'branch_id', name: 'branch_id'})
+  plan_links: LinkerPlansBranches[]
 }

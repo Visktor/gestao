@@ -3,16 +3,15 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import Plans from "./plans";
 import Payments from "./payments";
-import Classes from "./classes";
 import Branches from "./branches";
 import Sales from "./sales";
+import LinkerClassesMembers from "./classes_members";
 
 enum Status {
   ACTIVE,
@@ -56,8 +55,9 @@ export default class Members {
   @OneToMany(() => Payments, (p) => p.member)
   payments: Payments[];
 
-  @ManyToMany(() => Classes)
-  classes: Classes[];
+  @OneToMany(() => LinkerClassesMembers, (lcm) => lcm.member)
+  @JoinColumn({ referencedColumnName: "member_id", name: "member_id" })
+  class_links: LinkerClassesMembers;
 
   @ManyToOne(() => Branches, (b) => b.members)
   @JoinColumn({ name: "branch_id" })

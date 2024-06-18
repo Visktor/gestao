@@ -59,28 +59,28 @@ const useAlertStore = create<AlertStore>()((set, get) => ({
     get()._component.setAlert({
       content: content,
       type: "success",
-      duration: 1200,
+      duration: 2000,
     });
   },
   alertError: (content) => {
     get()._component.setAlert({
       content: content,
       type: "error",
-      duration: 1200,
+      duration: 2000,
     });
   },
   alertInfo: (content) => {
     get()._component.setAlert({
       content: content,
       type: "info",
-      duration: 1200,
+      duration: 2000,
     });
   },
   alertWarning: (content) => {
     get()._component.setAlert({
       content: content,
       type: "warning",
-      duration: 1200,
+      duration: 2000,
     });
   },
 }));

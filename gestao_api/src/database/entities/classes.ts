@@ -2,14 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import Users from "./users";
-import Members from "./members";
 import Branches from "./branches";
+import LinkerClassesMembers from "./classes_members";
+import LinkerUsersClasses from "./users_classes";
 
 enum ClassType {
   YOGA,
@@ -52,13 +51,13 @@ export default class Classes {
       | "sunday"]: boolean;
   };
 
-  @ManyToMany(() => Users, { onDelete: "CASCADE" })
-  @JoinTable()
-  users: Users[];
+  @OneToMany(() => LinkerUsersClasses, (luc) => luc.class)
+  @JoinColumn({ name: "class_id", referencedColumnName: "class_id" })
+  user_links: LinkerUsersClasses[];
 
-  @ManyToMany(() => Members, { onDelete: "CASCADE" })
-  @JoinTable()
-  members: Members[];
+  @OneToMany(() => LinkerClassesMembers, (lcm) => lcm.class)
+  @JoinColumn({ referencedColumnName: "class_id", name: "class_id" })
+  member_links: LinkerClassesMembers[];
 
   @ManyToOne(() => Branches, (b) => b.classes)
   @JoinColumn({ name: "branch_id" })

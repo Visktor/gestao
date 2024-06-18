@@ -4,6 +4,7 @@ import {
   faChevronUp,
   faCodeBranch,
   faFileContract,
+  faPerson,
   faUser,
   faUserTag,
 } from "@fortawesome/free-solid-svg-icons";
@@ -46,9 +47,14 @@ export default function Sidebar({
     },
     {
       icon: faFileContract,
-      path: '/plans',
-      description: 'Plans'
-    }
+      path: "/plans",
+      description: "Plans",
+    },
+    {
+      icon: faPerson,
+      path: "/members",
+      description: "Members",
+    },
   ];
 
   // TODO: implement animation on chevron icon

@@ -11,6 +11,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import useThemeStore from "#context/theme";
 import muiLightTheme from "#utils/lightTheme";
 import muiDarkTheme from "#utils/darkTheme";
+import SuperJSON from "superjson";
 
 function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -19,6 +20,7 @@ function App() {
       links: [
         httpBatchLink({
           url: "http://localhost:3334/trpc",
+          transformer: SuperJSON,
           async headers() {
             return {};
           },

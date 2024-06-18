@@ -1,4 +1,10 @@
-import { Column, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import Users from "./users";
 
 @Entity({ name: "roles" })
@@ -6,7 +12,7 @@ export default class Roles {
   @PrimaryGeneratedColumn("uuid")
   role_id: string;
 
-  @Column("json", { select: false })
+  @Column("json")
   permissions: {
     create_user: boolean;
     update_role: boolean;
@@ -17,8 +23,8 @@ export default class Roles {
   @Column("varchar", { length: 30 })
   name: string;
 
-  @Column("money", { select: false })
-  salary: number;
+  @Column("money")
+  salary: string;
 
   @Column("time")
   shift_start: Date;
@@ -26,7 +32,7 @@ export default class Roles {
   @Column("time")
   shift_end: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ select: false })
   delete_date: Date;
 
   @OneToMany(() => Users, (u) => u.role)

@@ -2,11 +2,12 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
   OneToMany,
+  DeleteDateColumn,
+  JoinColumn,
 } from "typeorm";
 import Members from "./members";
-import Branches from "./branches";
+import LinkerPlansBranches from "./plans_branches";
 
 @Entity("plans")
 export default class Plans {
@@ -23,9 +24,13 @@ export default class Plans {
   @Column("integer")
   duration: number;
 
+  @DeleteDateColumn()
+  delete_date: Date;
+
   @OneToMany(() => Members, (m) => m.member_id)
   members: Members[];
 
-  @ManyToMany(() => Branches)
-  branches: Branches;
+  @OneToMany(() => LinkerPlansBranches, (lpb) => lpb.plan, { cascade: true })
+  @JoinColumn({ referencedColumnName: "plan_id", name: "plan_id" })
+  branch_links: LinkerPlansBranches[];
 }

@@ -2,13 +2,12 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import ProductCategories from "./product_categories";
-import Sales from "./sales";
+import LinkerProductsSales from "./products_sales";
 
 @Entity("products")
 export default class Products {
@@ -34,7 +33,7 @@ export default class Products {
   @JoinColumn({ name: "product_category_id" })
   product_category: ProductCategories;
 
-  @ManyToMany(() => Sales)
-  @JoinTable()
-  sales: Sales[];
+  @OneToMany(() => LinkerProductsSales, (lps) => lps.product)
+  @JoinColumn({ referencedColumnName: "product_id", name: "product_id" })
+  sale_links: LinkerProductsSales;
 }
